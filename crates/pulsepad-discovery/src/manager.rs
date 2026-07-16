@@ -3,11 +3,9 @@ use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::net::UdpSocket;
-use tokio::sync::broadcast;
 use tracing::{debug, error, info, warn};
-use uuid::Uuid;
 
-use crate::error::{DiscoveryError, Result};
+use crate::error::Result;
 use pulsepad_protocol::packet::TransportType;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

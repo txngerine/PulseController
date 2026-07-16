@@ -2,10 +2,10 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
-use tracing::{debug, info, warn};
+use tracing::{debug, info};
 use uuid::Uuid;
 
-use crate::error::{Result, SecurityError};
+use crate::error::Result;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TrustedDevice {

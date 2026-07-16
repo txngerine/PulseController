@@ -1,5 +1,4 @@
-use std::sync::Arc;
-use tracing::{debug, error, info, warn};
+use tracing::{debug, info, warn};
 
 use crate::error::Result;
 use crate::controller::{ControllerInput, ButtonMapping, StickMapping, TriggerMapping};
@@ -39,7 +38,7 @@ impl InputEngine {
         trigger_mappings: Vec<TriggerMapping>,
         mouse_button_mappings: Vec<ButtonMapping>,
         sensitivity: f32,
-        deadzone: i16,
+        _deadzone: i16,
     ) {
         self.keyboard.load_mappings(button_mappings.clone());
         self.media.load_mappings(button_mappings.clone());
@@ -176,7 +175,7 @@ impl InputEngine {
     async fn process_triggers(
         &mut self,
         input: &ControllerInput,
-        backend: &dyn InputBackend,
+        _backend: &dyn InputBackend,
     ) -> Result<()> {
         // Triggers can be mapped to various actions
         // For now, log them for debugging

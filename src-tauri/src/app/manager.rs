@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tracing::{debug, error, info, warn};
+use tracing::{debug, info, warn};
 use pulsepad_platform::traits::BackendConfig;
 use uuid::Uuid;
 
@@ -27,6 +27,7 @@ pub struct AppManagerInner {
     pub transport: RwLock<Option<Box<dyn Transport>>>,
     pub backend: RwLock<Option<Box<dyn InputBackend>>>,
     pub connected_device: RwLock<Option<ConnectedDevice>>,
+    #[allow(dead_code)]
     pub sequence_number: RwLock<u64>,
     pub log_store: LogStore,
 }

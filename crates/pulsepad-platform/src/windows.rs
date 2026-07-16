@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use tracing::{debug, error, info, warn};
+use     tracing::{debug, info, warn};
 
 use crate::error::{PlatformError, Result};
 use crate::traits::{BackendConfig, InputBackend, ControllerState, MouseButton, MediaKey};
@@ -86,7 +86,7 @@ impl InputBackend for WindowsBackend {
             use windows::Win32::UI::Input::KeyboardAndMouse::*;
 
             let vk = key as u16;
-            let flags = if down { KEYDOWN } else { KEYUP };
+            let flags = if down { KEYBD_EVENT_FLAGS(0u32) } else { KEYEVENTF_KEYUP };
 
             unsafe {
                 let inputs = [INPUT {
@@ -204,7 +204,7 @@ impl InputBackend for WindowsBackend {
                         Anonymous: INPUT_0 {
                             mi: MOUSEINPUT {
                                 dwFlags: MOUSEEVENTF_WHEEL,
-                                mouseData: y * 120,
+                                mouseData: (y * 120) as u32,
                                 ..Default::default()
                             },
                         },
@@ -220,7 +220,7 @@ impl InputBackend for WindowsBackend {
                         Anonymous: INPUT_0 {
                             mi: MOUSEINPUT {
                                 dwFlags: MOUSEEVENTF_HWHEEL,
-                                mouseData: x * 120,
+                                mouseData: (x * 120) as u32,
                                 ..Default::default()
                             },
                         },
@@ -257,7 +257,7 @@ impl InputBackend for WindowsBackend {
                 MediaKey::Explorer => 0xB6,
             };
 
-            let flags = if down { KEYDOWN } else { KEYUP };
+            let flags = if down { KEYBD_EVENT_FLAGS(0u32) } else { KEYEVENTF_KEYUP };
 
             unsafe {
                 let inputs = [INPUT {

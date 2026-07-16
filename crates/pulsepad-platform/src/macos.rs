@@ -28,7 +28,7 @@ impl Default for MacosBackend {
 #[cfg(target_os = "macos")]
 mod cg {
     pub use core_graphics::event::{
-        CGEvent, CGEventTapLocation, CGEventType, CGMouseButton, CGScrollEventUnit,
+        CGEvent, CGEventTapLocation, CGEventType, CGMouseButton,
         ScrollEventUnit,
     };
     pub use core_graphics::event::EventField;

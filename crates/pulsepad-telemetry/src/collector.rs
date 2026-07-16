@@ -3,7 +3,7 @@ use parking_lot::RwLock;
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 use std::sync::Arc;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MetricsSnapshot {
@@ -21,6 +21,7 @@ pub struct MetricsSnapshot {
 
 #[derive(Debug, Clone)]
 struct LatencyEntry {
+    #[allow(dead_code)]
     timestamp: Instant,
     latency_us: u64,
 }

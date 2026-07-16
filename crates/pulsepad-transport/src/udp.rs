@@ -30,6 +30,7 @@ impl UdpTransport {
         self.remote_addr
     }
 
+    #[allow(dead_code)]
     async fn reconnect(&mut self) -> Result<()> {
         if let Some(addr) = self.remote_addr {
             warn!("attempting reconnect to {}", addr);
