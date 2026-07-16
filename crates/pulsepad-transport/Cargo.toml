@@ -1,0 +1,19 @@
+[package]
+name = "pulsepad-transport"
+description = "Transport abstraction for device communication"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+pulsepad-protocol = { path = "../pulsepad-protocol" }
+tokio = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+dashmap = { workspace = true }
+parking_lot = { workspace = true }
+async-trait = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+[target.'cfg(target_os = "macos")'.dependencies]

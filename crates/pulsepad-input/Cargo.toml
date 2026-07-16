@@ -1,0 +1,16 @@
+[package]
+name = "pulsepad-input"
+description = "Input processing engine for controller, keyboard, mouse, and media"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+pulsepad-protocol = { path = "../pulsepad-protocol" }
+pulsepad-platform = { path = "../pulsepad-platform" }
+tokio = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+parking_lot = { workspace = true }
+async-trait = { workspace = true }

@@ -1,0 +1,15 @@
+[package]
+name = "pulsepad-profiles"
+description = "Profile management for controller mappings"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+pulsepad-protocol = { path = "../pulsepad-protocol" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+tokio = { workspace = true }

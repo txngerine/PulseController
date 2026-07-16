@@ -1,0 +1,53 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/pulsepad-protocol",
+    "crates/pulsepad-transport",
+    "crates/pulsepad-input",
+    "crates/pulsepad-platform",
+    "crates/pulsepad-profiles",
+    "crates/pulsepad-storage",
+    "crates/pulsepad-security",
+    "crates/pulsepad-telemetry",
+    "crates/pulsepad-discovery",
+    "src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT"
+repository = "https://github.com/pulsepad/pulsepad-receiver"
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+bincode = "1"
+postcard = { version = "1", features = ["alloc"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+thiserror = "2"
+anyhow = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+dashmap = "6"
+bytes = "1"
+parking_lot = "0.12"
+cfg-if = "1"
+sha2 = "0.10"
+hmac = "0.12"
+rand = "0.8"
+hex = "0.4"
+async-trait = "0.1"
+dirs = "6"
+windows = { version = "0.58", features = [
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Threading",
+] }
+core-foundation = "0.10"
+core-graphics = "0.24"
+cocoa = "0.26"
+objc = "0.2"

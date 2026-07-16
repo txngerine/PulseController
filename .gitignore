@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+target/
+
+# Build artifacts
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+
+# Tauri
+src-tauri/target/
+src-tauri/WixTools/
+src-tauri/bundle/
