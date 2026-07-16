@@ -30,10 +30,11 @@ jobs:
         run: npm ci
 
       - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm --prefix "$GITHUB_WORKSPACE/frontend" run tauri -- build --no-bundle
+        with:
+          tauriScript: npm --prefix frontend exec tauri
 
   build-macos:
     runs-on: macos-latest
@@ -53,6 +54,7 @@ jobs:
         run: npm ci
 
       - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
@@ -61,8 +63,8 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: |
-          npm --prefix "$GITHUB_WORKSPACE/frontend" run tauri -- build --no-bundle
+        with:
+          tauriScript: npm --prefix frontend exec tauri
 
   build-linux:
     runs-on: ubuntu-22.04
@@ -87,7 +89,8 @@ jobs:
         run: npm ci
 
       - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm --prefix "$GITHUB_WORKSPACE/frontend" run tauri -- build --no-bundle
+        with:
+          tauriScript: npm --prefix frontend exec tauri
