@@ -2,8 +2,6 @@
 
 mod app;
 mod commands;
-mod network;
-mod profiles;
 mod ui;
 
 use tracing::info;

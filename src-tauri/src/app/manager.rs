@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tracing::{debug, info, warn};
+use tracing::{debug, error, info, warn};
+use pulsepad_platform::traits::BackendConfig;
 use uuid::Uuid;
 
 use pulsepad_discovery::DiscoveryManager;
@@ -90,18 +91,18 @@ impl AppManager {
 
         #[cfg(target_os = "windows")]
         {
-            let backend: Box<dyn InputBackend> = Box::new(
-                pulsepad_platform::windows::WindowsBackend::new(),
-            );
-            *self.inner.backend.write().await = Some(backend);
+            let mut backend = pulsepad_platform::windows::WindowsBackend::new();
+            backend.initialize(BackendConfig::default()).await
+                .map_err(|e| anyhow::anyhow!("windows backend init failed: {e}"))?;
+            *self.inner.backend.write().await = Some(Box::new(backend) as Box<dyn InputBackend>);
         }
 
         #[cfg(target_os = "macos")]
         {
-            let backend: Box<dyn InputBackend> = Box::new(
-                pulsepad_platform::macos::MacosBackend::new(),
-            );
-            *self.inner.backend.write().await = Some(backend);
+            let mut backend = pulsepad_platform::macos::MacosBackend::new();
+            backend.initialize(BackendConfig::default()).await
+                .map_err(|e| anyhow::anyhow!("macos backend init failed: {e}"))?;
+            *self.inner.backend.write().await = Some(Box::new(backend) as Box<dyn InputBackend>);
         }
 
         #[cfg(not(any(target_os = "windows", target_os = "macos")))]
@@ -197,6 +198,7 @@ impl AppManager {
                         Ok(data) => data,
                         Err(e) => {
                             warn!("receive error: {}", e);
+                            self.inner.log_store.log("warn", &format!("receive error: {e}"));
                             continue;
                         }
                     },
@@ -245,6 +247,7 @@ impl AppManager {
                         self.process_raw_packet(raw).await;
                     } else {
                         warn!("unrecognised packet ({} bytes)", data.len());
+                        self.inner.log_store.log("warn", &format!("unrecognised packet ({} bytes)", data.len()));
                         self.inner.telemetry.read().await.record_packet_dropped();
                     }
                 }
