@@ -6,8 +6,7 @@
   "build": {
     "frontendDist": "../frontend/dist",
     "devUrl": "http://localhost:1420",
-    "beforeDevCommand": "npm --prefix /Users/codecarrots/Documents/openit/pulsecontroller/frontend run dev",
-    "beforeBuildCommand": "npm --prefix ../frontend run build"
+    "beforeDevCommand": "npm --prefix ../frontend run dev"
   },
   "app": {
     "windows": [
