@@ -22,6 +22,9 @@ pub enum PlatformError {
 
     #[error("configuration error: {0}")]
     Configuration(String),
+
+    #[error("{0}")]
+    Other(String),
 }
 
 pub type Result<T> = std::result::Result<T, PlatformError>;

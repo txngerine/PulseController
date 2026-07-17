@@ -30,6 +30,8 @@ dashmap = { workspace = true }
 parking_lot = { workspace = true }
 bincode = { workspace = true }
 anyhow = { workspace = true }
+rand = { workspace = true }
+base64 = { workspace = true }
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

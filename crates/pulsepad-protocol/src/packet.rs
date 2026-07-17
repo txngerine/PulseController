@@ -24,6 +24,13 @@ pub enum PacketType {
     Accelerometer = 0x23,
     ProfileSwitch = 0x30,
     ProfileSwitchAck = 0x31,
+    ClockSync = 0x32,
+    ClockSyncResponse = 0x33,
+    LatencyReport = 0x34,
+    ProfileList = 0x35,
+    ProfileListResponse = 0x36,
+    ProfileData = 0x37,
+    ProfileDataResponse = 0x38,
     DeviceInfo = 0x40,
     DeviceInfoAck = 0x41,
     Error = 0xFE,
@@ -48,6 +55,13 @@ impl PacketType {
             0x23 => Some(Self::Accelerometer),
             0x30 => Some(Self::ProfileSwitch),
             0x31 => Some(Self::ProfileSwitchAck),
+            0x32 => Some(Self::ClockSync),
+            0x33 => Some(Self::ClockSyncResponse),
+            0x34 => Some(Self::LatencyReport),
+            0x35 => Some(Self::ProfileList),
+            0x36 => Some(Self::ProfileListResponse),
+            0x37 => Some(Self::ProfileData),
+            0x38 => Some(Self::ProfileDataResponse),
             0x40 => Some(Self::DeviceInfo),
             0x41 => Some(Self::DeviceInfoAck),
             0xFE => Some(Self::Error),
@@ -313,6 +327,17 @@ pub struct HandshakePayload {
     pub protocol_version: u32,
     pub capabilities: DeviceCapabilities,
     pub session_token: Option<[u8; 32]>,
+    pub auth_secret: Option<[u8; 32]>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HandshakeAckPayload {
+    pub accepted: bool,
+    pub server_name: String,
+    pub protocol_version: u32,
+    pub auth_challenge: Option<[u8; 32]>,
+    pub session_token: Option<[u8; 32]>,
+    pub reject_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -410,6 +435,80 @@ pub struct DeviceInfoPayload {
 pub struct ErrorPayload {
     pub code: u16,
     pub message: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClockSyncPayload {
+    pub t1: u64,  // Client send time (monotonic us)
+    pub t2: u64,  // Server receive time
+    pub t3: u64,  // Server send time
+}
+
+impl ClockSyncPayload {
+    pub fn new_request() -> Self {
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_micros() as u64;
+        Self { t1: now, t2: 0, t3: 0 }
+    }
+
+    pub fn into_response(mut self) -> Self {
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_micros() as u64;
+        self.t2 = now;
+        self.t3 = now;
+        self
+    }
+
+    /// Compute one-way latency from the response.
+    /// t4 = our receive time (provided by caller).
+    pub fn compute_latency(&self, t4: u64) -> (f64, f64) {
+        let offset = ((self.t2 as i64 - self.t1 as i64) + (self.t3 as i64 - t4 as i64)) as f64 / 2.0;
+        let rtt = (t4 as i64 - self.t1 as i64) - (self.t3 as i64 - self.t2 as i64);
+        (offset, rtt as f64)
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LatencyReport {
+    pub current_ms: f64,
+    pub average_ms: f64,
+    pub best_ms: f64,
+    pub worst_ms: f64,
+    pub jitter_ms: f64,
+    pub packet_loss_pct: f64,
+    pub packets_sent: u64,
+    pub packets_received: u64,
+    pub packets_lost: u64,
+    pub sample_count: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProfileListPayload {
+    pub profiles: Vec<ProfileEntry>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProfileEntry {
+    pub id: String,
+    pub name: String,
+    pub is_active: bool,
+    pub game_name: Option<String>,
+    pub controller_type: String,
+    pub last_used: Option<u64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProfileDataPayload {
+    pub id: String,
+    pub name: String,
+    pub game_name: Option<String>,
+    pub controller_type: String,
+    pub mapping_json: String,
+    pub button_config_json: String,
 }
 
 // Button bitflags
