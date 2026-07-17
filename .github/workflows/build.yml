@@ -73,6 +73,6 @@ jobs:
           tagName: ${{ github.ref_name }}
           releaseName: 'PulsePad v__VERSION__'
           releaseBody: 'See the assets below to download and install this version.'
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
