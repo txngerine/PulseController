@@ -71,7 +71,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           projectPath: src-tauri
-          tauriScript: npm --prefix frontend exec tauri
+          tauriScript: npm --prefix ../frontend exec tauri
           tagName: ${{ github.ref_name }}
           releaseName: 'PulsePad v__VERSION__'
           releaseBody: 'See the assets below to download and install this version.'
