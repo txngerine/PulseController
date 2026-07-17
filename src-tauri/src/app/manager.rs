@@ -106,7 +106,15 @@ impl AppManager {
             *self.inner.backend.write().await = Some(Box::new(backend) as Box<dyn InputBackend>);
         }
 
-        #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+        #[cfg(target_os = "linux")]
+        {
+            let mut backend = pulsepad_platform::linux::LinuxBackend::new();
+            backend.initialize(BackendConfig::default()).await
+                .map_err(|e| anyhow::anyhow!("linux backend init failed: {e}"))?;
+            *self.inner.backend.write().await = Some(Box::new(backend) as Box<dyn InputBackend>);
+        }
+
+        #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
         {
             error!("unsupported platform");
             return Err(anyhow::anyhow!("unsupported platform"));
